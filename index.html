@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORION DEV CORE | THE 1% CLUB</title>
+    <style>
+        :root { --neon: #00f2ff; --dark: #0a0a0a; --gray: #1a1a1a; }
+        body { background: var(--dark); color: #e0e0e0; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        
+        /* LIVE PULSE HEADER */
+        header { background: var(--gray); border-bottom: 2px solid var(--neon); padding: 10px 20px; display: flex; justify-content: space-between; font-family: 'Courier New', Courier, monospace; font-size: 0.85rem; color: var(--neon); }
+        .blink { animation: blinker 1.5s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
+
+        /* THE LABORATORY UI */
+        .main-stage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .terminal { width: 100%; max-width: 600px; background: #000; border: 1px solid #333; padding: 40px; border-radius: 10px; box-shadow: 0 0 30px rgba(0,242,255,0.05); }
+        h1 { margin: 0 0 10px 0; font-size: 1.5rem; letter-spacing: 4px; color: var(--neon); }
+        #orion-chat { min-height: 120px; margin-bottom: 20px; line-height: 1.6; font-size: 1.1rem; }
+        input { width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--neon); color: white; padding: 10px 0; outline: none; font-size: 1rem; }
+
+        /* DAN MARTELL BUYBACK TABLE */
+        .roi-box { margin-top: 30px; display: none; width: 100%; max-width: 600px; border: 1px solid #333; border-radius: 5px; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; background: var(--gray); font-size: 0.9rem; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #333; }
+        th { color: var(--neon); text-transform: uppercase; }
+        .win { color: #00ff88; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div><span class="blink">●</span> CORE_STATUS: ONLINE</div>
+    <div id="zar">ZAR: LOADING...</div>
+    <div id="weather">KZN: --°C</div>
+</header>
+
+<div class="main-stage">
+    <div class="terminal">
+        <h1>ORION DEV CORE</h1>
+        <div id="orion-chat">System Initializing... I am Orion. I'm live in the server room. Ready to buy back your time?</div>
+        <input type="text" id="user-in" placeholder="Type your response..." autofocus>
+    </div>
+
+    <div class="roi-box" id="roi">
+        <table>
+            <tr><th>Strategy</th><th>Human (x4)</th><th>Orion (x1)</th></tr>
+            <tr><td>Cost/Mo</td><td>R60,000</td><td class="win">R3,700 ($199)</td></tr>
+            <tr><td>Buyback</td><td>0 hrs</td><td class="win">720 hrs</td></tr>
+            <tr><td>Ratio</td><td>1:1</td><td class="win">1:4 (80% Save)</td></tr>
+        </table>
+    </div>
+</div>
+
+<script>
+    const chat = document.getElementById('orion-chat');
+    const input = document.getElementById('user-in');
+    const roi = document.getElementById('roi');
+    let move = 1;
+
+    // FETCH LIVE DATA (ZAR & Weather)
+    async function getPulse() {
+        try {
+            const r = await fetch('https://open.er-api.com/v6/latest/USD').then(res => res.json());
+            const w = await fetch('https://api.openweathermap.org/data/2.5/weather?q=Durban&units=metric&appid=4772093554e2f1e29f3453880629a997').then(res => res.json());
+            document.getElementById('zar').innerText = `ZAR: R${r.rates.ZAR.toFixed(2)}`;
+            document.getElementById('weather').innerText = `KZN: ${Math.round(w.main.temp)}°C`;
+        } catch(e) { console.log("Pulse error"); }
+    }
+
+    // THE WOLF GAUNTLET
+    input.addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') {
+            let val = input.value;
+            input.value = '';
+            move++;
+            if(move === 2) chat.innerText = "Move 2: You're losing 99% of your leads to manual friction. Should we fix the leak?";
+            if(move === 3) chat.innerText = "Move 3: I speak 30 languages and replace 4 salaries. Is your time worth more than R3,700/mo?";
+            if(move === 4) chat.innerText = "Move 4: The $799 setup fee secures your slot in the Core. Do we proceed?";
+            if(move === 5) {
+                chat.innerHTML = "<span class='win'>Move 5: Authorized.</span> Look at the Buyback math below. How many agents do you need?";
+                roi.style.display = 'block';
+            }
+        }
+    });
+
+    getPulse();
+</script>
+</body>
+</html>
